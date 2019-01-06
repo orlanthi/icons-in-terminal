@@ -26,7 +26,8 @@ DATA="${XDG_DATA_HOME:-${HOME}/.local/share}/icons-in-terminal/"
 mkdir -p ~/.fonts
 cp ./build/icons-in-terminal.ttf ~/.fonts/
 mkdir -p ~/.config/fontconfig/conf.d
-./scripts/generate_fontconfig.sh > ~/.config/fontconfig/conf.d/30-icons.conf
+config="$(./scripts/generate_fontconfig.sh)"
+echo "$config" > ~/.config/fontconfig/conf.d/30-icons.conf
 fc-cache -fvr --really-force ~/.fonts
 
 mkdir -p "$DATA"
