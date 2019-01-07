@@ -34,7 +34,7 @@ Clone the `icons-in-terminal` git repository somewhere
 ```bash
 $ git clone https://github.com/sebastiencs/icons-in-terminal.git
 ```
-| NB: All future installation instructions assume you have changed into the cloned directory.
+> NB: All future installation instructions assume you have changed into the cloned directory.
 
 ### Experimental Install
 
@@ -48,17 +48,17 @@ To install, run:
 ```bash
 $ ./install.sh  
 ```
-| Follow the instructions to edit ~/.config/fontconfig/conf.d/30-icons.conf
+> Follow the instructions to edit ~/.config/fontconfig/conf.d/30-icons.conf
 
 #### OS X Additional Installation
 
 There are two additional steps you need to perform on OS X. First you need to add the TrueType Font file to FontBook. The second is to modifiy the default system font list file to include the icons-in-terminal font. Please note that you will need XCode installed to perform the second step as you will need it to edit a binary plist file.
 
-| Note: These instructions are shamelessly copied from https://github.com/gabrielelana/awesome-terminal-fonts/wiki/OS-X
+> Note: These instructions were copied from https://github.com/gabrielelana/awesome-terminal-fonts/wiki/OS-X after information from @amoriello and @sebastiencs (see [here](https://github.com/sebastiencs/icons-in-terminal/issues/1#issuecomment-320480809))
 
 ##### Install icons-in-terminal in FontBook
 
-Modifying the default font list file is sufficient to get the icons to appear in the terminal but they won't be usable in Mac applications (for example the emacs app) unless they are also installed in FontBook. To do that, run:
+To install the icons in FontBook, run:
 ```bash
 open build/icons-in-terminal.ttf
 ```
@@ -76,7 +76,7 @@ Launch Terminal.app from the Utilities menu once booted into System Recovery and
 csrutil disable; reboot
 ```
 
-###### Edit default font list
+###### Edit the default font list
 
 Once rebooted back into normal mode, use Xcode.app to open and edit the `DefaultFontFallbacks.plist` file.
 
@@ -92,7 +92,7 @@ Edit the plist:
 ```bash
 open -a Xcode.app /tmp/DefaultFontFallbacks.plist
 ```
-In the plist editor, expand "monospace" then hover off the "monospace" row and click the <kbd>+</kbd> icon to add a new row and type in `icons-in-terminal`. Save and exit XCode.
+In the plist editor, expand "monospace" then hover off the "monospace" row and click the <kbd>+</kbd> icon to add a new row and change the value to `icons-in-terminal`. Save and exit XCode.
 
 Overwrite `DefaultFontFallbacks.plist`:
 ```bash
@@ -197,11 +197,11 @@ Restart a terminal, now you can print any icons with its name:
 ```bash
 $ echo -e $oct_location # note the '-e'
 ```
-| Note: The above only works if using bash version 4.2 or greater. ie: this won't work on some versions of OS X.
+> Note: The above only works if using bash version 4.2 or greater. ie: this won't work on some versions of OS X.
 
 ### Emacs integration
 
-You will need to `require` both `icons-in-terminal.el` (which has been installed into `~/.local/share/icons-in-terminal`) and `font-lock+.el` which you will have to clone somewhere from [github](https://github.com/emacsmirror/font-lock-plus). (Thanks to thanks to thomasluquet, see https://github.com/sebastiencs/icons-in-terminal/pull/12/files). For example, your emacs init file might contain:
+You will need to `require` both `icons-in-terminal.el` (which has been installed into `~/.local/share/icons-in-terminal`) and `font-lock+.el` which you will have to clone somewhere from [github](https://github.com/emacsmirror/font-lock-plus). (Thanks to @thomasluquet, see [here](https://github.com/sebastiencs/icons-in-terminal/pull/12/files)). For example, your emacs init file might contain:
 ```el
 (add-to-list 'load-path "<PATH TO CLONED FONT LOCK PLUS>")
 (require 'font-lock+)
