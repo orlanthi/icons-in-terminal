@@ -24,20 +24,92 @@
 
 ## Installation
 
+Make sure you have `fontconfig installed`. You can check this by running:
+```bash
+fc-conflist
+```
+If you don't have it then install it with whatever package manager you're using on your system.
+
+Clone the `icons-in-terminal` git repository somewhere
 ```bash
 $ git clone https://github.com/sebastiencs/icons-in-terminal.git
 ```
+| NB: All future installation instructions assume you have changed into the cloned directory.
 
-To install `icons-in-terminal`, run:  
-```bash
-$ ./install.sh  
-$ # Follow the instructions to edit ~/.config/fontconfig/conf.d/30-icons.conf
-```
-Or if your terminal is [supported](https://github.com/sebastiencs/icons-in-terminal/issues/1) (Experimental)
+### Experimental Install
+
+If your terminal is [supported](https://github.com/sebastiencs/icons-in-terminal/issues/1) (OS X's Terminal or the iTerm application are _not_), run:__
 ```bash
 $ ./install-autodetect.sh 
 ```
-Done ! You can start a new terminal and run `print_icons.sh` to see the installed gryphs.  
+
+### Standard Install
+To install, run:  
+```bash
+$ ./install.sh  
+```
+| Follow the instructions to edit ~/.config/fontconfig/conf.d/30-icons.conf
+
+#### OS X Additional Installation
+
+There are two additional steps you need to perform on OS X. First you need to add the TrueType Font file to FontBook. The second is to modifiy the default system font list file to include the icons-in-terminal font. Please note that you will need XCode installed to perform the second step as you will need it to edit a binary plist file.
+
+| Note: These instructions are shamelessly copied from https://github.com/gabrielelana/awesome-terminal-fonts/wiki/OS-X
+
+##### Install icons-in-terminal in FontBook
+
+Modifying the default font list file is sufficient to get the icons to appear in the terminal but they won't be usable in Mac applications (for example the emacs app) unless they are also installed in FontBook. To do that, run:
+```bash
+open build/icons-in-terminal.ttf
+```
+and then click the 'Install Font' button. You can then close FontBook if you like.
+
+##### Add icons-in-terminal to the default font list
+
+###### Disable System Integrity Protection
+
+Reboot your mac and hold <kbd>CMD+R</kbd> after the startup chime.
+
+Launch Terminal.app from the Utilities menu once booted into System Recovery and run:
+
+```bash
+csrutil disable; reboot
+```
+
+###### Edit default font list
+
+Once rebooted back into normal mode, use Xcode.app to open and edit the `DefaultFontFallbacks.plist` file.
+
+First, make a backup:
+```bash
+sudo cp /System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreText.framework/Resources/DefaultFontFallbacks.plist /System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreText.framework/Resources/DefaultFontFallbacks.plist.ORIG
+```
+Copy the file to a non-super-user-accessble directory:
+```bash
+cp /System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreText.framework/Resources/DefaultFontFallbacks.plist /tmp
+```
+Edit the plist:
+```bash
+open -a Xcode.app /tmp/DefaultFontFallbacks.plist
+```
+In the plist editor, expand "monospace" then hover off the "monospace" row and click the <kbd>+</kbd> icon to add a new row and type in `icons-in-terminal`. Save and exit XCode.
+
+Overwrite `DefaultFontFallbacks.plist`:
+```bash
+sudo mv /tmp/DefaultFontFallbacks.plist /System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreText.framework/Resources/DefaultFontFallbacks.plist
+```
+
+###### Re-Enable System Integrity Protection
+
+Now reboot into recovery mode again (<kbd>CMD+R</kbd>) and re-enable System Integrity Protection:
+
+```bash
+csrutil enable; reboot
+```
+
+### Checking installation
+
+You can start a new terminal and run `print_icons.sh` to see the installed glyphs.  
 You can see names of each icon by giving any parameter to `print_icons.sh`:  
 ```bash
 $ ./print_icons.sh
@@ -46,6 +118,7 @@ $ ./print_icons.sh --names | grep ANY_NAME
 ```
 To use icons in your terminal, **do not copy-paste icons** from the output of `print_icons.sh` but use their variable name: see [integrations](#integrations).  
 When one of the provided font will be updated and add new icons, some codepoints in `icons-in-terminal.ttf` will be changed, the variable names won't.  
+
 
 ## Building
 
@@ -124,17 +197,25 @@ Restart a terminal, now you can print any icons with its name:
 ```bash
 $ echo -e $oct_location # note the '-e'
 ```
+| Note: The above only works if using bash version 4.2 or greater. ie: this won't work on some versions of OS X.
 
 ### Emacs integration
 
-Add this line to your emacs init file:
+You will need to `require` both `icons-in-terminal.el` (which has been installed into `~/.local/share/icons-in-terminal`) and `font-lock+.el` which you will have to clone somewhere from [github](https://github.com/emacsmirror/font-lock-plus). (Thanks to thanks to thomasluquet, see https://github.com/sebastiencs/icons-in-terminal/pull/12/files). For example, your emacs init file might contain:
 ```el
+(add-to-list 'load-path "<PATH TO CLONED FONT LOCK PLUS>")
+(require 'font-lock+)
+
 (add-to-list 'load-path "~/.local/share/icons-in-terminal/")
-```
-To use icons-in-terminal in your package:
-```el
 (require 'icons-in-terminal)
-(insert (icons-in-terminal 'oct_flame)) ; C-h f icons-in-terminal[RET] for more info
+```
+You can try this out in emacs by opening a `*scratch*` window and running:
+```el
+(insert (icons-in-terminal 'oct_flame))
+```
+You can also get more help by executing:
+```el
+C-h f icons-in-terminal[RET]
 ```
 
 ## Projects using icons-in-terminal
